@@ -2,14 +2,15 @@
 
 /* global Meteor */
 /* global Template */
+/* global Mongo */
+
+var Tasks = new Mongo.Collection('tasks');
 
 if (Meteor.isClient) {
 	Template.body.helpers({
-		tasks: [
-			{text: 'task 1'},
-			{text: 'task 2'},
-			{text: 'task 3'}
-		]
+		tasks: function () {
+			return Tasks.find({});
+		}
 	});
 }
 
