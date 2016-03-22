@@ -19,9 +19,18 @@ if (Meteor.isClient) {
 			var text = event.target.text.value;
 			Tasks.insert({
 				text: text,
-				createdAt: new Date()
+				createdAt: new Date(),
+				checked: false
 			});
 			event.target.text.value = "";
+		},
+
+		'click .toggle-checked': function () {
+			Tasks.update(this._id, {$set: {checked: ! this.checked}});
+		},
+
+		'click .delete': function () {
+			Tasks.remove(this._id);
 		}
 	});
 }
