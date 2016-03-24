@@ -124,3 +124,7 @@ header .hide-completed {
     padding-bottom: 5px;
   }
 }
+
+.incomplete-count {
+	color: red;
+}
