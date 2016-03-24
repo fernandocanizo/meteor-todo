@@ -9,6 +9,8 @@
 var Tasks = new Mongo.Collection('tasks');
 
 if (Meteor.isClient) {
+	Meteor.subscribe('tasks');
+
 	Template.body.helpers({
 		tasks: function () {
 			if(Session.get('hideCompleted')) {
@@ -91,7 +93,7 @@ Meteor.methods({
 
 
 if (Meteor.isServer) {
-	Meteor.startup(function () {
-	// code to run on server at startup
+	Meteor.publish('tasks', function () {
+		return Tasks.find();
 	});
 }
