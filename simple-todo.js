@@ -43,6 +43,12 @@ if (Meteor.isClient) {
 		}
 	});
 
+	Template.task.helpers({
+		isOwner: function () {
+			return this.owner === Meteor.userId();
+		}
+	});
+
 	Template.task.events({
 		'click .toggle-checked': function () {
 			Meteor.call('toggleChecked', this._id);
@@ -50,6 +56,10 @@ if (Meteor.isClient) {
 
 		'click .delete': function () {
 			Meteor.call('deleteTask', this._id);
+		},
+
+		'click .toggle-private': function () {
+			Meteor.call('togglePrivacy', this._id);
 		},
 	});
 
@@ -69,24 +79,35 @@ Meteor.methods({
 			text: text,
 			createdAt: new Date(),
 			checked: false,
+			private: false,
 			owner: Meteor.userId(),
 			username: Meteor.user().username
 		});
 	},
 
 	deleteTask: function (taskId) {
-		if(! Meteor.userId()) {
+		var task = Tasks.findOne(taskId);
+		if(task.owner !== Meteor.userId()) {
 			throw new Meteor.Error("Not authorized!");
 		}
 		Tasks.remove(taskId);
 	},
 
 	toggleChecked: function (taskId) {
-		if(! Meteor.userId()) {
+		var task = Tasks.findOne(taskId);
+		if(task.private && task.owner !== Meteor.userId()) {
 			throw new Meteor.Error("Not authorized!");
 		}
-		var task = Tasks.findOne(taskId);
 		task.checked = ! task.checked;
+		Tasks.update(taskId, task);
+	},
+
+	togglePrivacy: function (taskId) {
+		var task = Tasks.findOne(taskId);
+		if(task.owner !== Meteor.userId()) {
+			throw new Meteor.Error("Not authorized!");
+		}
+		task.private = ! task.private;
 		Tasks.update(taskId, task);
 	}
 });
@@ -94,6 +115,11 @@ Meteor.methods({
 
 if (Meteor.isServer) {
 	Meteor.publish('tasks', function () {
-		return Tasks.find();
+		return Tasks.find({
+			$or: [
+				{private: {$ne: true}},
+				{owner: this.userId},
+			]
+		});
 	});
 }
