@@ -23,7 +23,6 @@ if (Meteor.isClient) {
 		},
 
 		incompleteCount: function () {
-			console.log(Tasks.find({checked: {$ne: true}}).count());
 			return Tasks.find({checked: {$ne: true}}).count();
 		}
 
