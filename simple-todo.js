@@ -4,6 +4,7 @@
 /* global Template */
 /* global Mongo */
 /* global Session */
+/* global Accounts */
 
 var Tasks = new Mongo.Collection('tasks');
 
@@ -35,7 +36,9 @@ if (Meteor.isClient) {
 			Tasks.insert({
 				text: text,
 				createdAt: new Date(),
-				checked: false
+				checked: false,
+				owner: Meteor.userId(),
+				username: Meteor.user().username
 			});
 			event.target.text.value = "";
 		},
@@ -51,6 +54,10 @@ if (Meteor.isClient) {
 		'change .hide-completed input': function (event) {
 			Session.set('hideCompleted', event.target.checked);
 		}
+	});
+
+	Accounts.ui.config({
+		passwordSignupFields: "USERNAME_AND_EMAIL"
 	});
 }
 

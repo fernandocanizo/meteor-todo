@@ -7,14 +7,18 @@
 		<header>
 			<h1>ToDo <span class="incomplete-count" title="Unfinished tasks count">({{incompleteCount}})</span></h1>
 
+			{{> loginButtons align="right"}}
+
 			<label class="hide-completed">
 				<input type="checkbox" checked="{{hideCompleted}}">
 				Hide completed tasks
 			</label>
 
-			<form class="new-task">
-				<input type="text" name="text" placeholder="Type here to add new tasks..." autofocus>
-			</form>
+			{{#if currentUser }}
+				<form class="new-task">
+					<input type="text" name="text" placeholder="Type here to add new tasks..." autofocus>
+				</form>
+			{{/ if }}
 		</header>
 
 		<ul>
@@ -29,6 +33,6 @@
 	<li class="{{#if checked }}checked{{/if}}">
 		<button class="delete">&times;</button>
 		<input type="checkbox" checked="{{#if checked }}checked{{/if}}" class="toggle-checked">
-		<span class="text">{{text}}</span>
+		<span class="text"><strong>{{username}}</strong> - {{text}}</span>
 	</li>
 </template>
