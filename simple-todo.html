@@ -5,7 +5,10 @@
 <body>
 	<div class="container">
 		<header>
-			<h1>ToDo</h1>
+			<label class="hide-completed">
+				<input type="checkbox" checked="{{hideCompleted}}">
+				Hide completed tasks
+			</label>
 
 			<form class="new-task">
 				<input type="text" name="text" placeholder="Type here to add new tasks..." autofocus>
